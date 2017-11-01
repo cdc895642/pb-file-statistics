@@ -1,0 +1,1 @@
+truncate table "file_statistics";

@@ -1,0 +1,1 @@
+insert into file_statistics(file_name, lines_count, avg_count_words_line, min_word_length, max_word_length) values('test0.txt',1,1,1,1);
