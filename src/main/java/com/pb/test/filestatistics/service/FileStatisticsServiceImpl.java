@@ -37,6 +37,7 @@ public class FileStatisticsServiceImpl implements FileStatisticsService {
   @Value("${app.args.validation.error}")
   private String noWordsValidationMessage;
 
+  @Autowired
   public void setFileWriter(FileWriter fileWriter) {
     this.fileWriter = fileWriter;
   }
