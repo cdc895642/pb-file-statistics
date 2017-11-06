@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 import com.pb.test.filestatistics.model.FileStatistics;
 import com.pb.test.filestatistics.repository.FileStatsRepositoryImpl;
 import com.pb.test.filestatistics.validation.AppArgsValidator;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
@@ -20,7 +22,9 @@ import java.util.List;
 
 import javax.validation.ValidationException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,6 +51,8 @@ public class FileStatisticsServiceImplTest {
   private FileWriter fileWriter;
   @InjectMocks
   private FileStatisticsServiceImpl fileStatisticsService;
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Before
   public void setup() throws IOException {
@@ -98,7 +104,8 @@ public class FileStatisticsServiceImplTest {
     //Arrange
     when(appArgsValidator.isValid(any())).thenReturn(true);
     when(appArgs.getNonOptionArgs()).thenReturn(new ArrayList<String>() {{
-      add("d:\\folder\\");
+      //add("d:\\folder\\");
+      add(temporaryFolder.newFolder().getPath());
     }});
     MockMultipartFile file = new MockMultipartFile("file",
         "test.txt",
@@ -138,9 +145,11 @@ public class FileStatisticsServiceImplTest {
   @Test
   public void saveFile_folderFinishedSeparator_returnPath() throws IOException {
     //Arrange
-    String expectedPath = "d:\\folder\\test.txt";
+//    String expectedPath = "d:\\folder\\test.txt";
+      String newFolder = temporaryFolder.newFolder().getPath();
+      String expectedPath = newFolder + File.separator+"test.txt";
     when(appArgs.getNonOptionArgs()).thenReturn(new ArrayList<String>() {{
-      add("d:\\folder\\");
+      add(newFolder+File.separator);
     }});
     MockMultipartFile file = new MockMultipartFile("file",
         "test.txt",
@@ -157,9 +166,12 @@ public class FileStatisticsServiceImplTest {
   @Test
   public void saveFile_folderNotFinishedSeparator_returnPath() throws IOException {
     //Arrange
-    String expectedPath = "d:\\folder\\test.txt";
+    //String expectedPath = "d:\\folder\\test.txt";
+    String newFolder = temporaryFolder.newFolder().getPath();
+    String expectedPath = newFolder + File.separator+"test.txt";
+
     when(appArgs.getNonOptionArgs()).thenReturn(new ArrayList<String>() {{
-      add("d:\\folder");
+      add(newFolder);
     }});
     MockMultipartFile file = new MockMultipartFile("file",
         "test.txt",
